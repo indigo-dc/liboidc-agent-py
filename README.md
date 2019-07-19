@@ -1,4 +1,4 @@
-# liboidc-agent
+# liboidcagent
 
 A python library for requesting OpenID Connect access tokens from
 [oidc-agent](https://github.com/indigo-dc/oidc-agent).
@@ -23,9 +23,9 @@ token = get_access_token_by_issuer_url("https://issuer.example.com", 60, "Exampl
 
 
 ## Installation
-`pip install liboidc-agent`
+`pip install liboidcagent`
 
 
 ## License
-`liboidc-agent` is provided under the [MIT License](https://opensource.org/licenses/MIT).
+`liboidcagent` is provided under the [MIT License](https://opensource.org/licenses/MIT).
 
