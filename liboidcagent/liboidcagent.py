@@ -32,7 +32,7 @@ def get_access_token(account_name,
                      scope=None):
     """Gets access token by account short name"""
     return get_token_response(account_name, min_valid_period, application_hint,
-                              scope)
+                              scope)[0]
 
 
 def get_access_token_by_issuer_url(issuer_url,
@@ -41,7 +41,7 @@ def get_access_token_by_issuer_url(issuer_url,
                                    scope=None):
     """Gets access token by issuer url"""
     return get_token_response_by_issuer_url(issuer_url, min_valid_period,
-                                            application_hint, scope)
+                                            application_hint, scope)[0]
 
 
 def _create_token_request(acc_iss_data, min_valid_period, application_hint,
