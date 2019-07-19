@@ -6,7 +6,7 @@ A python library for requesting OpenID Connect access tokens from
 ## Usage
 
 ```python
-import liboidc-agent
+import liboidcagent
 
 token, issuer, expires_at = get_token_response("iam")
 token, issuer, expires_at, get_token_response("iam", 60)

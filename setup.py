@@ -15,8 +15,8 @@ def read(filename):
 
 
 setup(
-    name="liboidc-agent",
-    version="0.1.0",
+    name="liboidcagent",
+    version="0.1.1",
     url="https://github.com/indigo-dc/liboidc-agent-py",
     project_urls={
         'Source': 'https://github.com/indigo-dc/liboidc-agent-py',
