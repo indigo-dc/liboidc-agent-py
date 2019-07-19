@@ -6,17 +6,19 @@ A python library for requesting OpenID Connect access tokens from
 ## Usage
 
 ```python
-  token, issuer, expires_at = get_token_response("iam")
-  token, issuer, expires_at, get_token_response("iam", 60)
-  tokenresponse = get_token_response("iam", application_hint="Example-Py-App")
-  tokenresponse = get_token_response("iam", 60, "Example-Py-App")
-  tokenresponse = get_token_response("iam", 60, "Example-Py-App", "openid profile email")
+import liboidc-agent
 
-  token = get_access_token("iam", 60, "Example-Py-App")
+token, issuer, expires_at = get_token_response("iam")
+token, issuer, expires_at, get_token_response("iam", 60)
+tokenresponse = get_token_response("iam", application_hint="Example-Py-App")
+tokenresponse = get_token_response("iam", 60, "Example-Py-App")
+tokenresponse = get_token_response("iam", 60, "Example-Py-App", "openid profile email")
 
-  token, issuer, expires_at = get_token_response_by_issuer("https://issuer.example.com", 60, "Example-Py-App")
+token = get_access_token("iam", 60, "Example-Py-App")
 
-  token = get_access_token_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
+token, issuer, expires_at = get_token_response_by_issuer("https://issuer.example.com", 60, "Example-Py-App")
+
+token = get_access_token_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
 ```
 
 
