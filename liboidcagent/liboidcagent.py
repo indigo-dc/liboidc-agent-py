@@ -107,6 +107,3 @@ class OidcAgentConnectError(OidcAgentError):
 
     def __init__(self, message):
         super(OidcAgentConnectError, self).__init__(message)
-
-
-tokenresponse = get_token_response("iam", 60, "Example-Py-App")
