@@ -16,7 +16,7 @@ tokenresponse = oidc.get_token_response("iam", 60, "Example-Py-App", "openid pro
 
 token = oidc.get_access_token("iam", 60, "Example-Py-App")
 
-token, issuer, expires_at = oidc.get_token_response_by_issuer("https://issuer.example.com", 60, "Example-Py-App")
+token, issuer, expires_at = oidc.get_token_response_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
 
 token = oidc.get_access_token_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
 ```
