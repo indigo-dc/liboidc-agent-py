@@ -2,6 +2,6 @@
 
 from .liboidcagent import *
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 __author__ = 'Gabriel Zachmann <oidc-agent-contact@lists.kit.edu>'
 __all__ = []
