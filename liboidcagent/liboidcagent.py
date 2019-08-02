@@ -77,8 +77,8 @@ def _communicate_with_sock(request):
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     try:
         sock.connect(socket_path)
-    except socket.error:
-        raise OidcAgentConnectError('Could not connect to oidc-agent')
+    except socket.error as err:
+        raise OidcAgentConnectError('Could not connect to oidc-agent: {}'.format(str(err))
 
     sock.sendall(request.encode('utf-8'))
     res = b''

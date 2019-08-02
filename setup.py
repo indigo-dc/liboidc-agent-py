@@ -13,10 +13,18 @@ def read(filename):
         return re.sub(
             text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
 
+def get_property(prop, project):
+    """Get certain property from project folder."""
+    with open(os.path.join(project, '__init__.py')) as f:
+        result = re.search(r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop),
+                           f.read())
+    return result.group(1)
+
+PROJECT = "liboidcagent"
 
 setup(
-    name="liboidcagent",
-    version="0.1.5",
+    name=PROJECT,
+    version=get_property('__version__', PROJECT),
     url="https://github.com/indigo-dc/liboidc-agent-py",
     project_urls={
         'Source': 'https://github.com/indigo-dc/liboidc-agent-py',
@@ -25,8 +33,8 @@ setup(
         'https://indigo-dc.gitbooks.io/oidc-agent/api-py.html',
     },
     license='MIT',
-    author="Gabriel Zachmann",
-    author_email="oidc-agent-contact@lists.kit.edu",
+    author=get_property('__author__', PROJECT),
+    author_email=get_property('__author_email__', PROJECT),
     description=
     "A python library for requesting OpenID Connect access tokens from oidc-agent.",
     long_description=read("README.md"),
@@ -56,3 +64,4 @@ setup(
         'Natural Language :: English',
     ],
 )
+
