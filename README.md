@@ -9,7 +9,8 @@ A python library for requesting OpenID Connect access tokens from
 import liboidcagent as agent
 
 token, issuer, expires_at = agent.get_token_response("iam")
-token, issuer, expires_at, agent.get_token_response("iam", 60)
+token, issuer, expires_at = agent.get_token_response("iam", 60)
+
 tokenresponse = agent.get_token_response("iam", application_hint="Example-Py-App")
 tokenresponse = agent.get_token_response("iam", 60, "Example-Py-App")
 tokenresponse = agent.get_token_response("iam", 60, "Example-Py-App", "openid profile email")
@@ -20,7 +21,6 @@ token, issuer, expires_at = agent.get_token_response_by_issuer_url("https://issu
 
 token = agent.get_access_token_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
 ```
-
 
 ## Installation
 `pip install liboidcagent`
