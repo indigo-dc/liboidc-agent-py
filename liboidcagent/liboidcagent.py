@@ -8,64 +8,66 @@ import json
 def get_token_response_by_issuer_url(issuer_url,
                                      min_valid_period=0,
                                      application_hint=None,
-                                     scope=None):
+                                     scope=None, audience=None):
     """Gets token response by issuerURL; return triple of (access_token, issuer, expires_at)"""
     return _communicate_with_sock(
         _create_token_request_issuer(issuer_url, min_valid_period,
-                                     application_hint, scope))
+                                     application_hint, scope, audience))
 
 
 def get_token_response(account_name,
                        min_valid_period=0,
                        application_hint=None,
-                       scope=None):
+                       scope=None, audience=None):
     """Gets token response by account short name; return triple of (access_token, issuer,
     expires_at)"""
     return _communicate_with_sock(
         _create_token_request_account(account_name, min_valid_period,
-                                      application_hint, scope))
+                                      application_hint, scope, audience))
 
 
 def get_access_token(account_name,
                      min_valid_period=0,
                      application_hint=None,
-                     scope=None):
+                     scope=None, audience=None):
     """Gets access token by account short name"""
     return get_token_response(account_name, min_valid_period, application_hint,
-                              scope)[0]
+                              scope, audience)[0]
 
 
 def get_access_token_by_issuer_url(issuer_url,
                                    min_valid_period=0,
                                    application_hint=None,
-                                   scope=None):
+                                   scope=None, audience=None):
     """Gets access token by issuer url"""
     return get_token_response_by_issuer_url(issuer_url, min_valid_period,
-                                            application_hint, scope)[0]
+                                            application_hint, scope, audience)[0]
 
 
 def _create_token_request(acc_iss_data, min_valid_period, application_hint,
-                          scope):
+                          scope, audience):
     data = {'request': 'access_token'}
     data[acc_iss_data[0]] = acc_iss_data[1]
     if scope:
         data['scope'] = scope
     if application_hint:
         data['application_hint'] = application_hint
+    if audience:
+        data['audience'] = audience
     data['min_valid_period'] = min_valid_period
     return json.dumps(data)
 
 
 def _create_token_request_account(account, min_valid_period, application_hint,
-                                  scope):
+                                  scope, audience):
     return _create_token_request(('account', account), min_valid_period,
-                                 application_hint, scope)
+                                 application_hint, scope, audience)
 
 
 def _create_token_request_issuer(issuer, min_valid_period, application_hint,
-                                 scope):
+                                 scope, audience):
     return _create_token_request(('issuer', issuer), min_valid_period,
-                                 application_hint, scope)
+                                 application_hint, scope, audience)
 
 
 def _communicate_with_sock(request):

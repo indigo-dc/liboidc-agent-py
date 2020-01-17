@@ -14,6 +14,7 @@ token, issuer, expires_at = agent.get_token_response("iam", 60)
 tokenresponse = agent.get_token_response("iam", application_hint="Example-Py-App")
 tokenresponse = agent.get_token_response("iam", 60, "Example-Py-App")
 tokenresponse = agent.get_token_response("iam", 60, "Example-Py-App", "openid profile email")
+tokenresponse = agent.get_token_response("iam", 60, "Example-Py-App", "openid profile email", "foo bar")
 
 token = agent.get_access_token("iam", 60, "Example-Py-App")
 
