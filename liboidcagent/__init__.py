@@ -1,6 +1,10 @@
 """liboidc-agent - A python library for requesting OpenID Connect access tokens from oidc-agent."""
 
-__version__ = '0.2.0'
+from .liboidcagent import OidcAgentError, OidcAgentConnectError
+from .liboidcagent import get_access_token, get_access_token_by_issuer_url
+from .liboidcagent import get_token_response, get_token_response_by_issuer_url
+
+__version__ = '0.2.1'
 __author__ = 'Gabriel Zachmann'
 __author_email__ = 'oidc-agent-contact@lists.kit.edu'
 __all__ = []
