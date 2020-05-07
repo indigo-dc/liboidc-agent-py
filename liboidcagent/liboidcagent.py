@@ -95,7 +95,7 @@ def _communicate_with_sock(request):
         if len(part) < 4096:
             break
 
-    data = json.loads(res)
+    data = json.loads(res.decode("utf-8"))
     if 'error' in data:
         error = data['error']
         raise OidcAgentError(error)
