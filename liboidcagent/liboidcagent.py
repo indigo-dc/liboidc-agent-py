@@ -8,7 +8,8 @@ import json
 def get_token_response_by_issuer_url(issuer_url,
                                      min_valid_period=0,
                                      application_hint=None,
-                                     scope=None, audience=None):
+                                     scope=None,
+                                     audience=None):
     """Gets token response by issuerURL; return triple of (access_token, issuer, expires_at)"""
     return _communicate_with_sock(
         _create_token_request_issuer(issuer_url, min_valid_period,
@@ -18,7 +19,8 @@ def get_token_response_by_issuer_url(issuer_url,
 def get_token_response(account_name,
                        min_valid_period=0,
                        application_hint=None,
-                       scope=None, audience=None):
+                       scope=None,
+                       audience=None):
     """Gets token response by account short name; return triple of (access_token, issuer,
     expires_at)"""
     return _communicate_with_sock(
@@ -29,7 +31,8 @@ def get_token_response(account_name,
 def get_access_token(account_name,
                      min_valid_period=0,
                      application_hint=None,
-                     scope=None, audience=None):
+                     scope=None,
+                     audience=None):
     """Gets access token by account short name"""
     return get_token_response(account_name, min_valid_period, application_hint,
                               scope, audience)[0]
@@ -38,10 +41,11 @@ def get_access_token(account_name,
 def get_access_token_by_issuer_url(issuer_url,
                                    min_valid_period=0,
                                    application_hint=None,
-                                   scope=None, audience=None):
+                                   scope=None,
+                                   audience=None):
     """Gets access token by issuer url"""
-    return get_token_response_by_issuer_url(issuer_url, min_valid_period,
-                                            application_hint, scope, audience)[0]
+    return get_token_response_by_issuer_url(
+        issuer_url, min_valid_period, application_hint, scope, audience)[0]
 
 
 def _create_token_request(acc_iss_data, min_valid_period, application_hint,
@@ -80,7 +84,8 @@ def _communicate_with_sock(request):
     try:
         sock.connect(socket_path)
     except socket.error as err:
-        raise OidcAgentConnectError('Could not connect to oidc-agent: {}'.format(str(err))
+        raise OidcAgentConnectError(
+            'Could not connect to oidc-agent: {}'.format(str(err)))
 
     sock.sendall(request.encode('utf-8'))
     res = b''
