@@ -13,12 +13,14 @@ def read(filename):
         return re.sub(
             text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
 
+
 def get_property(prop, project):
     """Get certain property from project folder."""
     with open(os.path.join(project, '__init__.py')) as f:
         result = re.search(r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop),
                            f.read())
     return result.group(1)
+
 
 PROJECT = "liboidcagent"
 
@@ -40,7 +42,7 @@ setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=('tests', )),
-    install_requires=[],
+    install_requires=['PyNaCl>=1.2.0'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
@@ -64,4 +66,3 @@ setup(
         'Natural Language :: English',
     ],
 )
-
