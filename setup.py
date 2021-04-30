@@ -42,7 +42,10 @@ setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=('tests', )),
-    install_requires=['PyNaCl>=1.2.0'],
+    install_requires=[
+        'PyNaCl>=1.2.0',
+        'future',
+        ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
