@@ -201,7 +201,10 @@ def get_token_response(account_name,
         if str(err) == "No account configured with that short name" or str(
                 err).startswith("Could not connect to oidc-agent") or str(
                     err) == "OIDC_SOCK env var not set":
-            return _get_data_from_request(True, request)
+            try:
+                return _get_data_from_request(True, request)
+            except OidcAgentError as rErr:
+                raise err
         raise
 
 
