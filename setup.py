@@ -35,6 +35,7 @@ setup(
         'https://indigo-dc.gitbooks.io/oidc-agent/api-py.html',
     },
     license='MIT',
+    license_file='LICENSE',
     author=get_property('__author__', PROJECT),
     author_email=get_property('__author_email__', PROJECT),
     description=
@@ -45,7 +46,7 @@ setup(
     install_requires=[
         'PyNaCl>=1.2.0',
         'future',
-        ],
+    ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
