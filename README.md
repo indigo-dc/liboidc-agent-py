@@ -23,6 +23,18 @@ token, issuer, expires_at = agent.get_token_response_by_issuer_url("https://issu
 token = agent.get_access_token_by_issuer_url("https://issuer.example.com", 60, "Example-Py-App")
 ```
 
+### Error Handling
+The library will raise an exception of type `OidcAgentError` if something goes
+wrong.
+
+Error Handling can be done the following way:
+```python
+try:
+    print(agent.get_access_token(account_name))
+except agent.OidcAgentError as e:
+    print("ERROR oidc-agent: {}".format(e))
+```
+
 ## Installation
 `pip install liboidcagent`
 
