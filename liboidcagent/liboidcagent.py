@@ -19,15 +19,24 @@ from urllib.parse import urlsplit
 class OidcAgentError(Exception):
     """Basic exception for errors raised by liboidc-agent"""
 
-    def __init__(self, message):
-        super(OidcAgentError, self).__init__(message)
+    def __init__(self, message, help_msg=None):
+        self.message = message
+        self.help = help_msg
+        super(OidcAgentError, self).__init__(self.message)
+
+    def __str__(self):
+        if self.help:
+            return '{}\n{}'.format(self.message, self.help)
+        if self.message:
+            return self.message
+        return 'OidcAgentError'
 
 
 class OidcAgentRemoteError(OidcAgentError):
     """Basic exception for errors raised by liboidc-agent"""
 
-    def __init__(self, message):
-        super(OidcAgentRemoteError, self).__init__(message)
+    def __init__(self, message, help_msg=None):
+        super(OidcAgentRemoteError, self).__init__(message, help_msg)
 
 
 class OidcAgentConnectError(OidcAgentError):
@@ -141,10 +150,14 @@ def _get_data_from_request(remote, request):
     data = json.loads(res)
     if 'error' in data:
         error = data['error']
+        try:
+            help_msg = data['info']
+        except KeyError:
+            help_msg = None
         if remote:
-            raise OidcAgentRemoteError(error)
+            raise OidcAgentRemoteError(error, help_msg)
         else:
-            raise OidcAgentError(error)
+            raise OidcAgentError(error, help_msg)
     return data['access_token'], data['issuer'], data['expires_at']
 
 
@@ -198,9 +211,12 @@ def get_token_response(account_name,
     try:
         return _get_data_from_request(False, request)
     except OidcAgentError as err:
-        if str(err) == "No account configured with that short name" or str(
-                err).startswith("Could not connect to oidc-agent") or str(
-                    err) == "OIDC_SOCK env var not set":
+        err_msg = str(err)
+        if err_msg.startswith(
+                "No account configured with that short name"
+        ) or err_msg.startswith(
+                "Could not connect to oidc-agent") or err_msg.startswith(
+                    "OIDC_SOCK env var not set"):
             try:
                 return _get_data_from_request(True, request)
             except OidcAgentError as rErr:
