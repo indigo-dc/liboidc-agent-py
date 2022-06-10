@@ -11,8 +11,6 @@ import nacl.exceptions
 from nacl.public import PrivateKey, PublicKey, Box
 from nacl.encoding import Base64Encoder
 
-from future.standard_library import install_aliases
-install_aliases()
 from urllib.parse import urlsplit
 
 
@@ -158,13 +156,21 @@ def _get_data_from_request(remote, request):
             raise OidcAgentRemoteError(error, help_msg)
         else:
             raise OidcAgentError(error, help_msg)
+    return data
+
+
+def _get_at_iss_exp_from_data(data):
     return data['access_token'], data['issuer'], data['expires_at']
+
+
+def _get_at_iss_exo_from_request(remote, request):
+    data = _get_data_from_request(remote, request)
+    return _get_at_iss_exp_from_data(data)
 
 
 def _create_token_request(acc_iss_data, min_valid_period, application_hint,
                           scope, audience):
-    data = {'request': 'access_token'}
-    data[acc_iss_data[0]] = acc_iss_data[1]
+    data = {'request': 'access_token', acc_iss_data[0]: acc_iss_data[1]}
     if scope:
         data['scope'] = scope
     if application_hint:
@@ -187,13 +193,21 @@ def _create_token_request_issuer(issuer, min_valid_period, application_hint,
                                  application_hint, scope, audience)
 
 
+def _create_mytoken_request(account, mytoken_profile, application_hint):
+    data = {'request': 'mytoken', "account": account}
+    if mytoken_profile:
+        data['mytoken_profile'] = mytoken_profile
+    if application_hint:
+        data['application_hint'] = application_hint
+    return json.dumps(data)
+
 def get_token_response_by_issuer_url(issuer_url,
                                      min_valid_period=0,
                                      application_hint=None,
                                      scope=None,
                                      audience=None):
     """Gets token response by issuerURL; return triple of (access_token, issuer, expires_at)"""
-    return _get_data_from_request(
+    return _get_at_iss_exo_from_request(
         False,
         _create_token_request_issuer(issuer_url, min_valid_period,
                                      application_hint, scope, audience))
@@ -209,7 +223,7 @@ def get_token_response(account_name,
     request = _create_token_request_account(account_name, min_valid_period,
                                             application_hint, scope, audience)
     try:
-        return _get_data_from_request(False, request)
+        return _get_at_iss_exo_from_request(False, request)
     except OidcAgentError as err:
         err_msg = str(err)
         if err_msg.startswith(
@@ -218,7 +232,7 @@ def get_token_response(account_name,
                 "Could not connect to oidc-agent") or err_msg.startswith(
                     "OIDC_SOCK env var not set"):
             try:
-                return _get_data_from_request(True, request)
+                return _get_at_iss_exo_from_request(True, request)
             except OidcAgentError as rErr:
                 raise err
         raise
@@ -242,3 +256,30 @@ def get_access_token_by_issuer_url(issuer_url,
     """Gets access token by issuer url"""
     return get_token_response_by_issuer_url(
         issuer_url, min_valid_period, application_hint, scope, audience)[0]
+
+
+def get_mytoken_response(account_name,
+                       mytoken_profile=None,
+                       application_hint=None):
+    """Gets mytoken response by account short name; return dict with all values"""
+    request = _create_mytoken_request(account_name, mytoken_profile, application_hint)
+    try:
+        return _get_data_from_request(False, request)
+    except OidcAgentError as err:
+        err_msg = str(err)
+        if err_msg.startswith(
+                "No account configured with that short name"
+        ) or err_msg.startswith(
+                "Could not connect to oidc-agent") or err_msg.startswith(
+                    "OIDC_SOCK env var not set"):
+            try:
+                return _get_data_from_request(True, request)
+            except OidcAgentError as rErr:
+                raise err
+        raise
+
+def get_mytoken(account_name,
+                     mytoken_profile=None,
+                     application_hint=None):
+    """Gets mytoken by account short name"""
+    return get_mytoken_response(account_name, mytoken_profile, application_hint)[0]
