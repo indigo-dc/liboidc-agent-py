@@ -1,17 +1,16 @@
 """This module enables python applications to request OpenID Connect
 access tokens from oidc-agent"""
 
-import socket
 import base64
-import os
-import json
 import binascii
+import json
+import os
+import socket
+from urllib.parse import urlsplit
 
 import nacl.exceptions
-from nacl.public import PrivateKey, PublicKey, Box
 from nacl.encoding import Base64Encoder
-
-from urllib.parse import urlsplit
+from nacl.public import PrivateKey, PublicKey, Box
 
 
 class OidcAgentError(Exception):
@@ -201,6 +200,7 @@ def _create_mytoken_request(account, mytoken_profile, application_hint):
         data['application_hint'] = application_hint
     return json.dumps(data)
 
+
 def get_token_response_by_issuer_url(issuer_url,
                                      min_valid_period=0,
                                      application_hint=None,
@@ -229,8 +229,8 @@ def get_token_response(account_name,
         if err_msg.startswith(
                 "No account configured with that short name"
         ) or err_msg.startswith(
-                "Could not connect to oidc-agent") or err_msg.startswith(
-                    "OIDC_SOCK env var not set"):
+            "Could not connect to oidc-agent") or err_msg.startswith(
+            "OIDC_SOCK env var not set"):
             try:
                 return _get_at_iss_exo_from_request(True, request)
             except OidcAgentError as rErr:
@@ -259,8 +259,8 @@ def get_access_token_by_issuer_url(issuer_url,
 
 
 def get_mytoken_response(account_name,
-                       mytoken_profile=None,
-                       application_hint=None):
+                         mytoken_profile=None,
+                         application_hint=None):
     """Gets mytoken response by account short name; return dict with all values"""
     request = _create_mytoken_request(account_name, mytoken_profile, application_hint)
     try:
@@ -270,16 +270,45 @@ def get_mytoken_response(account_name,
         if err_msg.startswith(
                 "No account configured with that short name"
         ) or err_msg.startswith(
-                "Could not connect to oidc-agent") or err_msg.startswith(
-                    "OIDC_SOCK env var not set"):
+            "Could not connect to oidc-agent") or err_msg.startswith(
+            "OIDC_SOCK env var not set"):
             try:
                 return _get_data_from_request(True, request)
             except OidcAgentError as rErr:
                 raise err
         raise
 
+
 def get_mytoken(account_name,
-                     mytoken_profile=None,
-                     application_hint=None):
+                mytoken_profile=None,
+                application_hint=None):
     """Gets mytoken by account short name"""
     return get_mytoken_response(account_name, mytoken_profile, application_hint)[0]
+
+
+def get_account_infos():
+    """Gets information about all issuers and their available account names and if those are loaded or not"""
+    request = json.dumps({"request": "account_info"})
+    try:
+        res = _get_data_from_request(False, request)
+        return res["info"]
+    except OidcAgentError as err:
+        err_msg = str(err)
+        if err_msg.startswith("Could not connect to oidc-agent") or err_msg.startswith("OIDC_SOCK env var not set"):
+            try:
+                res = _get_data_from_request(True, request)
+                return res["info"]
+            except OidcAgentError as rErr:
+                raise err
+        raise
+
+
+def get_configured_accounts():
+    info = get_account_infos()
+    accounts = []
+    for _, i in info.items():
+        try:
+            accounts.extend(i["accounts"])
+        except KeyError:
+            pass
+    return accounts
